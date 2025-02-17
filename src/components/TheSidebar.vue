@@ -1,24 +1,3 @@
-<script lang="ts">
-import Button from 'primevue/button'
-
-export default {
-  props: {
-    links: Array<{ name: string; path: string; icon: string }>,
-  },
-  components: { Button },
-  data() {
-    return {
-      isCollapsed: false,
-    }
-  },
-  methods: {
-    toggleSidebar() {
-      this.isCollapsed = !this.isCollapsed
-    },
-  },
-}
-</script>
-
 <template>
   <aside
     :class="[
@@ -68,7 +47,32 @@ export default {
         variant="text"
         icon="pi pi-sign-out"
         class="!text-white hover:!border-gray-600 hover:!bg-gray-600"
+        @click="requestLogout"
       />
     </footer>
   </aside>
 </template>
+
+<script lang="ts">
+import { logout } from '@/services/auth/authService'
+
+export default {
+  props: {
+    links: Array<{ name: string; path: string; icon: string }>,
+  },
+  data() {
+    return {
+      isCollapsed: false,
+    }
+  },
+  methods: {
+    toggleSidebar() {
+      this.isCollapsed = !this.isCollapsed
+    },
+    requestLogout() {
+      logout()
+      this.$router.push('/')
+    },
+  },
+}
+</script>
