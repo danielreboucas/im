@@ -33,17 +33,14 @@ export default {
   methods: {
     async requestLogin() {
       const response = await login(this.email, this.password)
-      console.log(response)
 
       if (response?.status === 200) {
         this.$router.push('/dashboard')
       } else {
-        console.log('adpoksadopk')
-
         this.$toast.add({
-          severity: 'info',
-          summary: 'Info',
-          detail: 'Message Content',
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Credenciais inválidas',
           life: 3000,
         })
       }

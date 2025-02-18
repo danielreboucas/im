@@ -26,6 +26,8 @@ const routes = [
     children: [
       { path: 'dashboard', component: Dashboard },
       { path: 'products', component: AboutView },
+      { path: 'orders', component: AboutView },
+      { path: 'sales', component: AboutView },
     ],
   },
 ]

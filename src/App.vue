@@ -1,5 +1,6 @@
 <template>
-  <RouterView />
+  <Toast />
+  <div class="flex"><RouterView /></div>
 </template>
 
 <script lang="ts">
