@@ -1,5 +1,5 @@
 <template>
-  <div class="flex max-h-screen flex-col bg-gray-100">
+  <div class="flex flex-col overflow-y-hidden bg-gray-100">
     <header class="bg-white p-4">
       <h1 class="text-3xl font-semibold text-gray-800">{{ title }}</h1>
       <Breadcrumb :home="{ icon: 'pi pi-home', route: '/dashboard' }" :model="items">
