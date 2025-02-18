@@ -9,13 +9,30 @@ export const login = async (email: string, password: string) => {
       localStorage.setItem('access_level', response.data.access_level)
     }
     return { status: response.status, data: response.data }
-  } catch (error) {
-    console.log('inside', error)
+  } catch (error: any) {
+    return { status: error?.statusCode, data: error.message }
   }
 }
 
-export const register = async (email: string, password: string) => {
-  return api.post('/auth/register', { email, password })
+export const register = async (
+  name: string,
+  last_name: string,
+  email: string,
+  birth_date: string,
+  password: string,
+) => {
+  try {
+    const response = await api.post('/auth/register', {
+      name,
+      last_name,
+      email,
+      birth_date,
+      password,
+    })
+    return { status: response.status, data: response.data }
+  } catch (error: any) {
+    return { status: error?.statusCode, data: error.message }
+  }
 }
 
 export const logout = () => {
