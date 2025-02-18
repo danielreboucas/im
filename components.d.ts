@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Breadcrumb: typeof import('primevue/breadcrumb')['default']
     Button: typeof import('primevue/button')['default']
     DatePicker: typeof import('primevue/datepicker')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']

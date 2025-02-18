@@ -1,8 +1,8 @@
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
-import AboutView from '@/views/AboutView.vue'
 import Dashboard from '@/views/DashboardView.vue'
 import Login from '@/views/LoginView.vue'
+import ProductsView from '@/views/ProductsView.vue'
 import Register from '@/views/RegisterView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -25,9 +25,9 @@ const routes = [
     // meta: { requiresAuth: true },
     children: [
       { path: 'dashboard', component: Dashboard },
-      { path: 'products', component: AboutView },
-      { path: 'orders', component: AboutView },
-      { path: 'sales', component: AboutView },
+      { path: 'products', component: ProductsView },
+      { path: 'orders', component: ProductsView },
+      { path: 'sales', component: ProductsView },
     ],
   },
 ]
