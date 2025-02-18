@@ -17,7 +17,7 @@
       </Breadcrumb>
     </header>
     <main class="rounded-lg bg-white p-4 text-gray-800">
-      <slot></slot>
+      <slot class="w-full"></slot>
     </main>
   </div>
 </template>
