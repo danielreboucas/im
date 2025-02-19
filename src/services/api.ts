@@ -21,7 +21,10 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const errorMessage = error.response?.data?.message || 'Um erro inesperado aconteceu!'
+    const errorData = error.response?.data || {}
+    const errorMessage = Array.isArray(errorData.message)
+      ? errorData.message
+      : [errorData.message || 'Um erro inesperado aconteceu!']
     return Promise.reject({ messages: errorMessage, status: error.response?.status })
   },
 )

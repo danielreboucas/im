@@ -23,7 +23,7 @@ const routes = [
   {
     path: '/',
     component: MainLayout,
-    // meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
     children: [
       { path: 'dashboard', component: Dashboard },
       { path: 'products', component: ProductsView },

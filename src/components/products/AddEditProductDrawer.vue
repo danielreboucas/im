@@ -2,13 +2,12 @@
   <Drawer
     v-model:visible="innerShowAddProductDrawer"
     @after-hide="$emit('update-show-drawer')"
-    header="Criação de produto"
+    :header="!isEditing ? 'Criação de produto' : 'Edição de produto'"
     position="right"
     class="flex h-full min-w-xl"
-    c
   >
     <template #default>
-      <p>Insira as informações do produto à ser criado.</p>
+      <p>Insira as informações do produto à ser {{ !isEditing ? 'criado' : 'editado' }}.</p>
 
       <div class="flex flex-col gap-4 pt-8">
         <FloatLabel variant="on">
@@ -33,32 +32,44 @@
         </FloatLabel>
       </div>
     </template>
-    <template #footer
-      ><Button label="Criar Produto" class="w-full" @click="requestCreateProduct"
-    /></template>
+    <template #footer>
+      <Button
+        :label="!isEditing ? 'Criar' : 'Editar'"
+        class="w-full"
+        @click="!isEditing ? requestCreateProduct() : requestEditProduct()"
+      />
+    </template>
   </Drawer>
 </template>
 
 <script lang="ts">
-import { createProduct } from '@/services/products/productsService'
+import { createProduct, editProduct } from '@/services/products/productsService'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   emits: ['update-show-drawer', 'update-products-list'],
-  props: { showAddProductDrawer: Boolean },
+  props: { showAddProductDrawer: Boolean, isEditing: Boolean, productToEdit: Object },
   data() {
     return {
       innerShowAddProductDrawer: this.showAddProductDrawer,
       product: {
-        name: '',
-        description: '',
-        quantity: '',
+        name: this.productToEdit?.name || '',
+        description: this.productToEdit?.description || '',
+        quantity: this.productToEdit?.quantity || '',
       },
     }
   },
   watch: {
     showAddProductDrawer(newValue) {
       this.innerShowAddProductDrawer = newValue
+    },
+    productToEdit(newValue) {
+      console.log(this.productToEdit)
+      this.product = {
+        name: newValue?.name || '',
+        description: newValue?.description || '',
+        quantity: newValue?.quantity || '',
+      }
     },
   },
   methods: {
@@ -75,7 +86,43 @@ export default defineComponent({
           detail: 'Produto criado com sucesso!',
           life: 3000,
         })
-        this.$emit('update-products-list')
+        this.product = {
+          name: '',
+          description: '',
+          quantity: '',
+        }
+        this.$emit('update-products-list', this.product)
+        this.$emit('update-show-drawer')
+      } catch (error: any) {
+        error.messages.map((msg: string) => {
+          this.$toast.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: msg,
+            life: 3000,
+          })
+        })
+      }
+    },
+    async requestEditProduct() {
+      try {
+        await editProduct(this.productToEdit?.id, {
+          name: this.product.name,
+          description: this.product.description,
+          quantity: Number(this.product.quantity),
+        })
+        this.$toast.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Produto editado com sucesso!',
+          life: 3000,
+        })
+        this.product = {
+          name: '',
+          description: '',
+          quantity: '',
+        }
+        this.$emit('update-products-list', this.product)
         this.$emit('update-show-drawer')
       } catch (error: any) {
         error.messages.map((msg: string) => {

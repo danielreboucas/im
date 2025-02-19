@@ -28,6 +28,15 @@ export const createProduct = async (product: Product) => {
   }
 }
 
+export const editProduct = async (id: string, product: Product) => {
+  try {
+    const response = await api.patch(`/product/${id}`, product)
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}
+
 export const deleteProduct = async (id: string) => {
   try {
     const response = await api.delete(`/product/${id}`)
