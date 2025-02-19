@@ -1,3 +1,4 @@
+import { jwtDecode } from 'jwt-decode'
 import api from '../api'
 
 export const login = async (email: string, password: string) => {
@@ -10,7 +11,7 @@ export const login = async (email: string, password: string) => {
     }
     return { status: response.status, data: response.data }
   } catch (error: any) {
-    return { status: error?.statusCode, data: error.message }
+    throw error
   }
 }
 
@@ -39,4 +40,16 @@ export const logout = () => {
   localStorage.removeItem('access_token')
   localStorage.removeItem('user_id')
   localStorage.removeItem('access_level')
+}
+
+export const isAuthenticated = () => {
+  const token = localStorage.getItem('token')
+  if (!token) return false
+
+  try {
+    const decoded: { exp: number } = jwtDecode(token)
+    return decoded.exp * 1000 > Date.now()
+  } catch (error) {
+    return false
+  }
 }

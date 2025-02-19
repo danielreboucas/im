@@ -1,5 +1,6 @@
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
+import { isAuthenticated } from '@/services/auth/authService'
 import Dashboard from '@/views/DashboardView.vue'
 import Login from '@/views/LoginView.vue'
 import ProductsView from '@/views/ProductsView.vue'
@@ -38,8 +39,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = !!localStorage.getItem('token')
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  if (to.meta.requiresAuth && !isAuthenticated()) {
     next('/login')
   } else {
     next()

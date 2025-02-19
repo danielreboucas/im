@@ -78,11 +78,13 @@ export default defineComponent({
         this.$emit('update-products-list')
         this.$emit('update-show-drawer')
       } catch (error: any) {
-        this.$toast.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: error.message,
-          life: 3000,
+        error.messages.map((msg: string) => {
+          this.$toast.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: msg,
+            life: 3000,
+          })
         })
       }
     },

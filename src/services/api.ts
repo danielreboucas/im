@@ -18,4 +18,12 @@ api.interceptors.request.use(
   (error) => Promise.reject(error),
 )
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const errorMessage = error.response?.data?.message || 'Um erro inesperado aconteceu!'
+    return Promise.reject({ messages: errorMessage, status: error.response?.status })
+  },
+)
+
 export default api
