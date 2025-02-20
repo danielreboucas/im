@@ -2,10 +2,13 @@
   <PageContainer title="Produtos" :items="items">
     <DataTable
       tableStyle="min-width: 50rem;"
+      class="shadow-md"
       scrollable
       scrollHeight="400px"
-      class="shadow-md"
       size="large"
+      removableSort
+      :sortField="sortField"
+      :sortOrder="sortOrder"
       :paginator="true"
       :lazy="true"
       :value="products"
@@ -14,6 +17,7 @@
       :first="(page - 1) * perPage"
       :rowsPerPageOptions="[5, 10, 20, 50]"
       @page="onPageChange"
+      @sort="onSort"
     >
       <template #header>
         <div class="flex justify-between">
@@ -32,7 +36,13 @@
         </div>
       </template>
 
-      <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header" />
+      <Column
+        v-for="col of columns"
+        :key="col.field"
+        :field="col.field"
+        :header="col.header"
+        :sortable="col.sortable"
+      />
       <Column style="width: 10%; min-width: 8rem" bodyStyle="text-align:center">
         <template #body="slotProps">
           <div class="flex gap-4">
@@ -65,7 +75,8 @@
 import AddEditProductDrawer from '@/components/products/AddEditProductDrawer.vue'
 import type { Product } from '@/interfaces/IProduct'
 import { deleteProduct, getAllProducts } from '@/services/products/productsService'
-import type { DataTablePageEvent } from 'primevue'
+import { formatSortOrder } from '@/utils/formatSort'
+import type { DataTablePageEvent, DataTableSortEvent } from 'primevue'
 
 export default {
   components: { AddEditProductDrawer },
@@ -76,7 +87,7 @@ export default {
       columns: [
         { field: 'name', header: 'Nome' },
         { field: 'description', header: 'Descrição' },
-        { field: 'quantity', header: 'Quantidade' },
+        { field: 'quantity', header: 'Quantidade', sortable: true },
       ],
       productToEdit: {
         id: '',
@@ -87,6 +98,8 @@ export default {
       filters: {
         name: '',
       },
+      sortField: '' as string | ((item: any) => string) | undefined,
+      sortOrder: undefined as 0 | 1 | -1 | undefined,
       page: 1,
       perPage: 5,
       total: 0,
@@ -151,6 +164,13 @@ export default {
       this.showAddProductDrawer = false
       this.isEditing = false
     },
+    onSort(event: DataTableSortEvent) {
+      console.log(event)
+      this.sortField = event.sortField
+      this.sortOrder = event.sortOrder!
+      this.page = 1
+      this.requestGetAllProducts(this.page, this.perPage)
+    },
     onFilter() {
       if (this.debounceTimer) clearTimeout(this.debounceTimer)
       this.debounceTimer = setTimeout(() => {
@@ -160,7 +180,12 @@ export default {
     },
     async requestGetAllProducts(page: number, perPage: number): Promise<void> {
       try {
-        const response = await getAllProducts(page, perPage, this.filters.name)
+        const response = await getAllProducts(
+          page,
+          perPage,
+          formatSortOrder(this.sortOrder),
+          this.filters.name,
+        )
         this.products = response.data
         this.total = response.total
       } catch (error: any) {

@@ -1,10 +1,21 @@
 import type { Product } from '@/interfaces/IProduct'
+import { formatRequestParameters } from '@/utils/formatRequestParameters'
 import api from '../api'
 
-export const getAllProducts = async (page: number, per_page: number, name: string) => {
+export const getAllProducts = async (
+  page: number,
+  per_page: number,
+  sort?: string,
+  name?: string,
+) => {
   try {
     const response = await api.get(
-      `/product?page=${page}&per_page=${per_page}&product_name=${name}`,
+      `/product${formatRequestParameters({
+        page,
+        per_page,
+        sort,
+        name,
+      })}`,
     )
     return response.data
   } catch (error) {
