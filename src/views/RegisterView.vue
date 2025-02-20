@@ -24,9 +24,10 @@
         <div class="flex w-72 flex-col pt-2">
           <Button
             class="w-full !border-[#445267] !bg-[#445267] !transition-all !duration-200 hover:!opacity-80"
+            :icon="isLoading ? 'pi pi-spinner animate-spin' : ''"
+            label="Cadastrar"
             @click="requestRegister"
-            >Cadastrar</Button
-          >
+          />
         </div>
       </div>
     </div>
@@ -45,6 +46,8 @@ export default {
       email: '',
       birth_date: new Date(),
       password: '',
+
+      isLoading: false,
     }
   },
   computed: {
@@ -54,6 +57,7 @@ export default {
   },
   methods: {
     async requestRegister() {
+      this.isLoading = true
       const response = await register(
         this.name,
         this.last_name,
@@ -85,6 +89,7 @@ export default {
           life: 3000,
         })
       }
+      this.isLoading = false
     },
     goToLogin() {
       this.$router.push('/login')

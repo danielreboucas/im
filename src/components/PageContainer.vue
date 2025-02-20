@@ -1,8 +1,12 @@
 <template>
   <div class="flex flex-col overflow-y-hidden bg-gray-100">
-    <header class="bg-white p-4">
+    <header class="p-4">
       <h1 class="text-3xl font-semibold text-gray-800">{{ title }}</h1>
-      <Breadcrumb :home="{ icon: 'pi pi-home', route: '/dashboard' }" :model="items">
+      <Breadcrumb
+        :home="{ icon: 'pi pi-home', route: '/dashboard' }"
+        class="!bg-gray-100"
+        :model="items"
+      >
         <template #item="{ item, props }">
           <RouterLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
             <a :href="href" v-bind="props.action" @click="navigate">
@@ -16,7 +20,7 @@
         </template>
       </Breadcrumb>
     </header>
-    <main class="rounded-lg bg-white p-4 text-gray-800">
+    <main class="rounded-lg p-4 text-gray-800">
       <slot class="w-full"></slot>
     </main>
   </div>

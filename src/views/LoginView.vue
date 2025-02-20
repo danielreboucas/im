@@ -12,8 +12,10 @@
       </div>
       <Button
         class="w-72 !border-[#3C849B] !bg-[#3C849B] !transition-all !duration-200 hover:!opacity-80"
+        :icon="isLoading ? 'pi pi-spinner animate-spin' : ''"
+        label="Entrar"
         @click="requestLogin"
-        >Entrar</Button
+      />
       >
     </div>
     <img class="w-1/2" src="@/assets/login-image.jpg" />
@@ -28,10 +30,12 @@ export default {
     return {
       email: '',
       password: '',
+      isLoading: false,
     }
   },
   methods: {
     async requestLogin() {
+      this.isLoading = true
       const response = await login(this.email, this.password)
 
       if (response?.status === 200) {
@@ -44,6 +48,7 @@ export default {
           life: 3000,
         })
       }
+      this.isLoading = false
     },
     goToRegister() {
       this.$router.push('/register')
