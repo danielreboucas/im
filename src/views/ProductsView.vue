@@ -7,11 +7,14 @@
     />
     <DataTable
       :value="products"
-      tableStyle="min-width: 50rem"
+      tableStyle="min-width: 50rem;"
       editMode="row"
       scrollable
       scrollHeight="400px"
       class="pt-8 shadow-md"
+      paginator
+      :rows="5"
+      :rowsPerPageOptions="[5, 10, 20, 50]"
     >
       <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header" />
       <Column style="width: 10%; min-width: 8rem" bodyStyle="text-align:center">
@@ -35,7 +38,7 @@
       :showAddProductDrawer="showAddProductDrawer"
       :isEditing="isEditing"
       :productToEdit="productToEdit"
-      @update-show-drawer="showAddProductDrawer = false"
+      @update-show-drawer="updateShowDrawer"
       @update-products-list="requestGetAllProducts(page, perPage)"
     />
     <ConfirmPopup />
@@ -74,7 +77,7 @@ export default {
     this.requestGetAllProducts(this.page, this.perPage)
   },
   methods: {
-    async requestGetAllProducts(page: number, perPage: number) {
+    async requestGetAllProducts(page: number, perPage: number): Promise<void> {
       try {
         const response = await getAllProducts(page, perPage)
         this.products = response.data
@@ -89,7 +92,7 @@ export default {
         })
       }
     },
-    async requestDeleteProduct(id: string) {
+    async requestDeleteProduct(id: string): Promise<void> {
       try {
         await deleteProduct(id)
       } catch (error: any) {
@@ -103,7 +106,7 @@ export default {
         })
       }
     },
-    confirmDeleteProduct(id: string) {
+    confirmDeleteProduct(id: string): void {
       this.$confirm.require({
         message: 'Tem certeza que deseja remover esse produto?',
         icon: 'pi pi-exclamation-triangle',
@@ -129,16 +132,26 @@ export default {
       })
     },
     showAddEditProductDrawer(isEditing: boolean, product?: Product): void {
-      if (product) {
+      if (product && isEditing) {
         this.productToEdit = {
           id: product.id || '',
           name: product.name,
           description: product.description,
           quantity: product.quantity,
         }
-        this.isEditing = isEditing
+        this.isEditing = true
       }
       this.showAddProductDrawer = true
+    },
+    updateShowDrawer(): void {
+      this.productToEdit = {
+        id: '',
+        name: '',
+        description: '',
+        quantity: 0,
+      }
+      this.showAddProductDrawer = false
+      this.isEditing = false
     },
   },
 }

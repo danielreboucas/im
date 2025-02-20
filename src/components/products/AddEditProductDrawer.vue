@@ -53,9 +53,9 @@ export default defineComponent({
     return {
       innerShowAddProductDrawer: this.showAddProductDrawer,
       product: {
-        name: this.productToEdit?.name || '',
-        description: this.productToEdit?.description || '',
-        quantity: this.productToEdit?.quantity || '',
+        name: '',
+        description: '',
+        quantity: '',
       },
     }
   },
@@ -64,11 +64,10 @@ export default defineComponent({
       this.innerShowAddProductDrawer = newValue
     },
     productToEdit(newValue) {
-      console.log(this.productToEdit)
       this.product = {
-        name: newValue?.name || '',
-        description: newValue?.description || '',
-        quantity: newValue?.quantity || '',
+        name: this.isEditing ? newValue?.name : '',
+        description: this.isEditing ? newValue?.description : '',
+        quantity: this.isEditing ? newValue?.quantity : '',
       }
     },
   },
@@ -91,7 +90,7 @@ export default defineComponent({
           description: '',
           quantity: '',
         }
-        this.$emit('update-products-list', this.product)
+        this.$emit('update-products-list')
         this.$emit('update-show-drawer')
       } catch (error: any) {
         error.messages.map((msg: string) => {
@@ -122,7 +121,7 @@ export default defineComponent({
           description: '',
           quantity: '',
         }
-        this.$emit('update-products-list', this.product)
+        this.$emit('update-products-list')
         this.$emit('update-show-drawer')
       } catch (error: any) {
         error.messages.map((msg: string) => {
