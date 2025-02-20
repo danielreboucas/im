@@ -1,15 +1,10 @@
 <template>
   <PageContainer title="Produtos" :items="items">
-    <Button
-      label="Adicionar produto"
-      icon="pi pi-plus"
-      @click="showAddEditProductDrawer((isEditing = false))"
-    />
     <DataTable
       tableStyle="min-width: 50rem;"
       scrollable
       scrollHeight="400px"
-      class="pt-4 shadow-md"
+      class="shadow-md"
       size="large"
       :paginator="true"
       :lazy="true"
@@ -20,6 +15,23 @@
       :rowsPerPageOptions="[5, 10, 20, 50]"
       @page="onPageChange"
     >
+      <template #header>
+        <div class="flex justify-between">
+          <IconField iconPosition="left">
+            <InputIcon>
+              <i class="pi pi-search" />
+            </InputIcon>
+            <InputText v-model="filters.name" placeholder="Nome" @input="onFilter" />
+          </IconField>
+
+          <Button
+            label="Adicionar produto"
+            icon="pi pi-plus"
+            @click="showAddEditProductDrawer((isEditing = false))"
+          />
+        </div>
+      </template>
+
       <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header" />
       <Column style="width: 10%; min-width: 8rem" bodyStyle="text-align:center">
         <template #body="slotProps">
@@ -72,11 +84,15 @@ export default {
         description: '',
         quantity: 0,
       },
+      filters: {
+        name: '',
+      },
       page: 1,
       perPage: 5,
       total: 0,
       showAddProductDrawer: false,
       isEditing: false,
+      debounceTimer: null as any,
     }
   },
   created() {
@@ -135,13 +151,18 @@ export default {
       this.showAddProductDrawer = false
       this.isEditing = false
     },
+    onFilter() {
+      if (this.debounceTimer) clearTimeout(this.debounceTimer)
+      this.debounceTimer = setTimeout(() => {
+        this.page = 1
+        this.requestGetAllProducts(this.page, this.perPage)
+      }, 300)
+    },
     async requestGetAllProducts(page: number, perPage: number): Promise<void> {
       try {
-        const response = await getAllProducts(page, perPage)
+        const response = await getAllProducts(page, perPage, this.filters.name)
         this.products = response.data
-
         this.total = response.total
-        console.log(response.total)
       } catch (error: any) {
         error.messages.map((msg: string) => {
           this.$toast.add({

@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-full flex-col overflow-y-hidden bg-gray-100">
-    <header class="p-4">
+    <header class="p-4 pb-0">
       <h1 class="text-3xl font-semibold text-gray-800">{{ title }}</h1>
       <Breadcrumb
         :home="{ icon: 'pi pi-home', route: '/dashboard' }"

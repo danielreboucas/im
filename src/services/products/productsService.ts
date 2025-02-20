@@ -1,9 +1,11 @@
 import type { Product } from '@/interfaces/IProduct'
 import api from '../api'
 
-export const getAllProducts = async (page: number, per_page: number) => {
+export const getAllProducts = async (page: number, per_page: number, name: string) => {
   try {
-    const response = await api.get(`/product?page=${page}&per_page=${per_page}`)
+    const response = await api.get(
+      `/product?page=${page}&per_page=${per_page}&product_name=${name}`,
+    )
     return response.data
   } catch (error) {
     throw error
