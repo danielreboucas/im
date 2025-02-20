@@ -6,15 +6,19 @@
       @click="showAddEditProductDrawer((isEditing = false))"
     />
     <DataTable
-      :value="products"
       tableStyle="min-width: 50rem;"
-      editMode="row"
       scrollable
       scrollHeight="400px"
-      class="pt-8 shadow-md"
-      paginator
-      :rows="5"
+      class="pt-4 shadow-md"
+      size="large"
+      :paginator="true"
+      :lazy="true"
+      :value="products"
+      :rows="perPage"
+      :totalRecords="total"
+      :first="(page - 1) * perPage"
       :rowsPerPageOptions="[5, 10, 20, 50]"
+      @page="onPageChange"
     >
       <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header" />
       <Column style="width: 10%; min-width: 8rem" bodyStyle="text-align:center">
@@ -49,6 +53,7 @@
 import AddEditProductDrawer from '@/components/products/AddEditProductDrawer.vue'
 import type { Product } from '@/interfaces/IProduct'
 import { deleteProduct, getAllProducts } from '@/services/products/productsService'
+import type { DataTablePageEvent } from 'primevue'
 
 export default {
   components: { AddEditProductDrawer },
@@ -68,7 +73,8 @@ export default {
         quantity: 0,
       },
       page: 1,
-      perPage: 10,
+      perPage: 5,
+      total: 0,
       showAddProductDrawer: false,
       isEditing: false,
     }
@@ -77,34 +83,10 @@ export default {
     this.requestGetAllProducts(this.page, this.perPage)
   },
   methods: {
-    async requestGetAllProducts(page: number, perPage: number): Promise<void> {
-      try {
-        const response = await getAllProducts(page, perPage)
-        this.products = response.data
-      } catch (error: any) {
-        error.messages.map((msg: string) => {
-          this.$toast.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: msg,
-            life: 3000,
-          })
-        })
-      }
-    },
-    async requestDeleteProduct(id: string): Promise<void> {
-      try {
-        await deleteProduct(id)
-      } catch (error: any) {
-        error.messages.map((msg: string) => {
-          this.$toast.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: msg,
-            life: 3000,
-          })
-        })
-      }
+    onPageChange(e: DataTablePageEvent) {
+      this.page = e.page + 1
+      this.perPage = e.rows
+      this.requestGetAllProducts(this.page, this.perPage)
     },
     confirmDeleteProduct(id: string): void {
       this.$confirm.require({
@@ -121,7 +103,7 @@ export default {
         },
         accept: async () => {
           await this.requestDeleteProduct(id)
-          this.products = this.products.filter((product: Product) => product.id !== id)
+          await this.requestGetAllProducts(this.page, this.perPage)
 
           this.$toast.add({
             severity: 'info',
@@ -152,6 +134,38 @@ export default {
       }
       this.showAddProductDrawer = false
       this.isEditing = false
+    },
+    async requestGetAllProducts(page: number, perPage: number): Promise<void> {
+      try {
+        const response = await getAllProducts(page, perPage)
+        this.products = response.data
+
+        this.total = response.total
+        console.log(response.total)
+      } catch (error: any) {
+        error.messages.map((msg: string) => {
+          this.$toast.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: msg,
+            life: 3000,
+          })
+        })
+      }
+    },
+    async requestDeleteProduct(id: string): Promise<void> {
+      try {
+        await deleteProduct(id)
+      } catch (error: any) {
+        error.messages.map((msg: string) => {
+          this.$toast.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: msg,
+            life: 3000,
+          })
+        })
+      }
     },
   },
 }
