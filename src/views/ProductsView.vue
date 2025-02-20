@@ -165,7 +165,6 @@ export default {
       this.isEditing = false
     },
     onSort(event: DataTableSortEvent) {
-      console.log(event)
       this.sortField = event.sortField
       this.sortOrder = event.sortOrder!
       this.page = 1
