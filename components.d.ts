@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AddEditProductDrawer: typeof import('./src/components/products/AddEditProductDrawer.vue')['default']
+    AddEditSaleDrawer: typeof import('./src/components/sales/AddEditSaleDrawer.vue')['default']
     AddProductDrawer: typeof import('./src/components/products/AddProductDrawer.vue')['default']
     Breadcrumb: typeof import('primevue/breadcrumb')['default']
     Button: typeof import('primevue/button')['default']
@@ -15,6 +16,7 @@ declare module 'vue' {
     ConfirmPopup: typeof import('primevue/confirmpopup')['default']
     DataTable: typeof import('primevue/datatable')['default']
     DatePicker: typeof import('primevue/datepicker')['default']
+    Divider: typeof import('primevue/divider')['default']
     Drawer: typeof import('primevue/drawer')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
@@ -30,10 +32,13 @@ declare module 'vue' {
     PageContainer: typeof import('./src/components/PageContainer.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ScrollPanel: typeof import('primevue/scrollpanel')['default']
+    Skeleton: typeof import('primevue/skeleton')['default']
     Textarea: typeof import('primevue/textarea')['default']
     TheSidebar: typeof import('./src/components/TheSidebar.vue')['default']
     TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
     Toast: typeof import('primevue/toast')['default']
+    ViewSaleDrawer: typeof import('./src/components/sales/ViewSaleDrawer.vue')['default']
     WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
   }
 }

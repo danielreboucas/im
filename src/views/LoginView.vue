@@ -16,7 +16,6 @@
         label="Entrar"
         @click="requestLogin"
       />
-      >
     </div>
     <img class="w-1/2" src="@/assets/login-image.jpg" />
   </main>
